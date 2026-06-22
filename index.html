@@ -1,50 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>HVA Events Demo</title>
+  <title>Events Hub</title>
 
-  <!-- Calendar -->
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
-  <!-- Map -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
   <style>
-    :root {
-      /* 🎨 HVA-style approximate palette */
-      --primary: #4f6f52;     /* muted green */
-      --secondary: #a3b18a;   /* soft sage */
-      --background: #f6f3ee;  /* warm off-white */
-      --text: #2b2b2b;
-      --accent: #d4a373;      /* warm art tone */
-    }
-
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: var(--background);
-      color: var(--text);
+      font-family: Arial;
+      background: #f6f3ee;
     }
 
     header {
-      background: var(--primary);
+      background: #4f6f52;
       color: white;
-      padding: 12px 20px;
+      padding: 15px;
       font-size: 18px;
     }
 
     #layout {
       display: flex;
-      height: calc(100vh - 50px);
+      height: calc(100vh - 60px);
     }
 
     #calendar {
       width: 50%;
       padding: 10px;
       background: white;
-      border-right: 3px solid var(--secondary);
     }
 
     #map {
@@ -52,14 +39,13 @@
       height: 100%;
     }
 
-    /* Calendar styling */
-    .fc .fc-button {
-      background: var(--primary) !important;
+    .fc-event {
+      background: #d4a373 !important;
       border: none !important;
     }
 
-    .fc-event {
-      background: var(--accent) !important;
+    .fc-button {
+      background: #4f6f52 !important;
       border: none !important;
     }
   </style>
@@ -68,7 +54,7 @@
 <body>
 
 <header>
-  HVA Events Demo — Calendar + Map System
+  Events Hub — Calendar & Map
 </header>
 
 <div id="layout">
@@ -77,63 +63,42 @@
 </div>
 
 <script>
-/* ---------------- DATA ---------------- */
 const events = [
   {
-    title: "Art Exhibition",
-    start: "2026-06-25T14:00:00",
+    id: "big-art-fair",
+    title: "Big Art Fair",
+    start: "2026-07-10T10:00:00",
     lat: 51.5074,
     lng: -0.1278
-  },
-  {
-    title: "Creative Workshop",
-    start: "2026-06-26T10:00:00",
-    lat: 51.5155,
-    lng: -0.0922
-  },
-  {
-    title: "Gallery Walk",
-    start: "2026-06-27T16:00:00",
-    lat: 51.5033,
-    lng: -0.1195
   }
 ];
 
-/* ---------------- CALENDAR ---------------- */
+/* CALENDAR */
 const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
   initialView: 'dayGridMonth',
   events: events,
 
   eventClick: function(info) {
     const ev = events.find(e => e.title === info.event.title);
-    if (ev) {
-      map.setView([ev.lat, ev.lng], 14);
-      markers.forEach(m => {
-        if (m.title === ev.title) m.openPopup();
-      });
-    }
+    window.location.href = `/big-art-fair.html?id=${ev.id}`;
   }
 });
 
 calendar.render();
 
-/* ---------------- MAP ---------------- */
+/* MAP */
 const map = L.map('map').setView([51.5074, -0.1278], 12);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap'
 }).addTo(map);
 
-/* ---------------- MARKERS ---------------- */
-const markers = [];
-
 events.forEach(ev => {
-  const marker = L.marker([ev.lat, ev.lng])
+  L.marker([ev.lat, ev.lng])
     .addTo(map)
-    .bindPopup(`<b>${ev.title}</b><br>${ev.start}`);
-
-  marker.title = ev.title;
-  markers.push(marker);
+    .on('click', () => {
+      window.location.href = `/big-art-fair.html?id=${ev.id}`;
+    });
 });
 </script>
 
