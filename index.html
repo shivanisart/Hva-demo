@@ -80,7 +80,7 @@ const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), 
 
   eventClick: function(info) {
     const ev = events.find(e => e.title === info.event.title);
-    window.location.href = `/big-art-fair.html?id=${ev.id}`;
+    window.location.href = `big-art-fair.html?id=${ev.id}`;
   }
 });
 
@@ -97,7 +97,7 @@ events.forEach(ev => {
   L.marker([ev.lat, ev.lng])
     .addTo(map)
     .on('click', () => {
-      window.location.href = `/big-art-fair.html?id=${ev.id}`;
+      window.location.href = `big-art-fair.html?id=${ev.id}`;
     });
 });
 </script>
