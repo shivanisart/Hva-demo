@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Event Page</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f6f3ee;
+      color: #2b2b2b;
+    }
+
+    header {
+      background: #4f6f52;
+      color: white;
+      padding: 20px;
+      font-size: 22px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    #map {
+      height: 300px;
+      margin-top: 15px;
+      border-radius: 10px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 10px;
+      margin-right: 6px;
+      border-radius: 6px;
+      color: white;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header id="title"></header>
+
+<div class="container">
+  <div class="box">
+
+    <p id="desc"></p>
+    <p><b>Date:</b> <span id="date"></span></p>
+
+    <div id="tags"></div>
+
+    <div id="map"></div>
+
+  </div>
+</div>
+
+<script>
+
+/* =========================
+   EVENT DATABASE
+========================= */
+
+const data = {
+
+  "Big Art Fair": {
+    desc: "A major regional art fair showcasing artists, makers, and exhibitions.",
+    date: "10 July 2026",
+    lat: 51.5074,
+    lng: -0.1278,
+    color: "#b08968",
+    tags: ["Art Fair", "Exhibition"]
+  },
+
+  "Portrait Workshop": {
+    desc: "A hands-on portrait workshop for beginners and experienced artists.",
+    date: "15 July 2026",
+    lat: 51.5155,
+    lng: -0.0922,
+    color: "#d62828",
+    tags: ["Workshop", "Learning"]
+  },
+
+  "Area Coordinators Meeting (St Albans)": {
+    desc: "Internal coordination meeting for regional organisers in St Albans.",
+    date: "5 August 2026",
+    lat: 51.7527,
+    lng: -0.3394,
+    color: "#1d4ed8",
+    tags: ["Meeting", "Internal"]
+  },
+
+  "Open Studio": {
+    desc: "Artists open their studios to the public throughout September.",
+    date: "1–29 September 2026",
+    lat: 51.7748,
+    lng: -0.2377,
+    color: "#2e7d32",
+    tags: ["Open Studio", "Community"]
+  }
+
+};
+
+/* =========================
+   GET EVENT FROM URL
+========================= */
+
+const params = new URLSearchParams(window.location.search);
+const title = params.get("id");
+
+const ev = data[title];
+
+/* =========================
+   FILL PAGE
+========================= */
+
+document.getElementById("title").innerText = title;
+document.getElementById("desc").innerText = ev.desc;
+document.getElementById("date").innerText = ev.date;
+
+/* tags */
+const tagBox = document.getElementById("tags");
+
+ev.tags.forEach(t => {
+  const span = document.createElement("span");
+  span.className = "tag";
+  span.style.background = ev.color;
+  span.innerText = t;
+  tagBox.appendChild(span);
+});
+
+/* =========================
+   MAP
+========================= */
+
+const map = L.map('map').setView([ev.lat, ev.lng], 13);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap'
+}).addTo(map);
+
+L.marker([ev.lat, ev.lng]).addTo(map)
+  .bindPopup(title);
+
+</script>
+
+</body>
+</html>
