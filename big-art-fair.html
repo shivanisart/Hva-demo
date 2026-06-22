@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Big Art Fair</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #f6f3ee;
+      color: #2b2b2b;
+    }
+
+    header {
+      background: #4f6f52;
+      color: white;
+      padding: 20px;
+      font-size: 22px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    .box {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    #map {
+      height: 300px;
+      border-radius: 8px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #d4a373;
+      padding: 5px 10px;
+      margin-right: 5px;
+      border-radius: 5px;
+      color: white;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  Big Art Fair
+</header>
+
+<div class="container">
+
+  <div class="grid">
+
+    <!-- MAIN INFO -->
+    <div class="box">
+      <h2>About the Event</h2>
+
+      <p>
+        <!-- PLACEHOLDER: Replace with real HVA content -->
+        The Big Art Fair is a major contemporary arts event showcasing artists,
+        makers, and creative practitioners from across the region.
+      </p>
+
+      <p>
+        It brings together exhibitions, live demonstrations, and opportunities
+        for the public to engage directly with artists.
+      </p>
+
+      <div>
+        <span class="tag">Exhibition</span>
+        <span class="tag">Art Fair</span>
+        <span class="tag">Community</span>
+      </div>
+
+      <h3>What you can expect</h3>
+      <ul>
+        <li>Original artwork from local and regional artists</li>
+        <li>Live demonstrations and workshops</li>
+        <li>Opportunities to purchase artwork</li>
+        <li>Meet the artists</li>
+      </ul>
+
+      <h3>Time & Date</h3>
+      <p>10 July 2026 — 10:00 AM to 5:00 PM</p>
+    </div>
+
+    <!-- SIDE INFO -->
+    <div class="box">
+      <h3>Location</h3>
+      <div id="map"></div>
+
+      <h3>Info</h3>
+      <p><b>Entry:</b> Free / Paid (update if needed)</p>
+      <p><b>Organiser:</b> Herts Visual Arts</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const map = L.map('map').setView([51.5074, -0.1278], 13);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap'
+}).addTo(map);
+
+L.marker([51.5074, -0.1278]).addTo(map)
+  .bindPopup("Big Art Fair Location");
+</script>
+
+</body>
+</html>
