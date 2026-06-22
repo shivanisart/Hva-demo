@@ -1,105 +1,187 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Events Hub</title>
+  <title>HVA Events Portal</title>
 
+  <!-- FullCalendar -->
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
+  <!-- Leaflet Map -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
   <style>
+    :root {
+      --green: #4f6f52;
+      --sage: #a3b18a;
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --text: #2b2b2b;
+    }
+
     body {
       margin: 0;
-      font-family: Arial;
-      background: #f6f3ee;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
     }
 
     header {
-      background: #4f6f52;
+      background: var(--green);
       color: white;
-      padding: 15px;
-      font-size: 18px;
+      padding: 16px 20px;
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
     }
 
-    #layout {
+    #container {
       display: flex;
       height: calc(100vh - 60px);
+      gap: 10px;
+      padding: 10px;
+      box-sizing: border-box;
     }
 
+    /* LEFT PANEL (Calendar) */
     #calendar {
       width: 50%;
+      background: var(--card);
+      border-radius: 12px;
       padding: 10px;
-      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
 
+    /* RIGHT PANEL (Map) */
     #map {
       width: 50%;
-      height: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
 
-    .fc-event {
-      background: #d4a373 !important;
-      border: none !important;
+    /* Calendar styling */
+    .fc {
+      font-size: 14px;
+    }
+
+    .fc-toolbar-title {
+      font-size: 18px !important;
     }
 
     .fc-button {
-      background: #4f6f52 !important;
+      background: var(--green) !important;
       border: none !important;
     }
+
+    .fc-event {
+      border: none !important;
+      padding: 2px 4px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
   </style>
 </head>
 
 <body>
 
 <header>
-  Events Hub — Calendar & Map
+  HVA Events Portal — Calendar & Map
 </header>
 
-<div id="layout">
+<div id="container">
   <div id="calendar"></div>
   <div id="map"></div>
 </div>
 
 <script>
-const events = [
-  {
-    id: "big-art-fair",
-    title: "Big Art Fair",
-    start: "2026-07-17T10:00:00",
-    lat: 51.5074,
-    lng: -0.1278
-  }
-];
+/* =========================
+   EVENTS DATA
+========================= */
 
-/* CALENDAR */
+const events = [];
+
+/* Big Art Fair */
+events.push({
+  id: "big-art-fair",
+  title: "Big Art Fair",
+  start: "2026-07-10",
+  color: "#b08968", // brown
+  lat: 51.5074,
+  lng: -0.1278
+});
+
+/* Portrait Workshop */
+events.push({
+  id: "portrait-workshop",
+  title: "Portrait Workshop",
+  start: "2026-07-15",
+  color: "#d62828", // red
+  lat: 51.5155,
+  lng: -0.0922
+});
+
+/* Coordinators Meeting */
+events.push({
+  id: "coordinators-meeting",
+  title: "Area Coordinators Meeting (St Albans)",
+  start: "2026-08-05",
+  color: "#1d4ed8", // blue
+  lat: 51.7527,
+  lng: -0.3394
+});
+
+/* Open Studio (1–29 Sept) */
+for (let day = 1; day <= 29; day++) {
+  events.push({
+    id: "open-studio",
+    title: "Open Studio",
+    start: `2026-09-${String(day).padStart(2,'0')}`,
+    color: "#2e7d32", // green
+    lat: 51.7748,
+    lng: -0.2377
+  });
+}
+
+/* =========================
+   CALENDAR
+========================= */
+
 const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
   initialView: 'dayGridMonth',
+  height: "100%",
   events: events,
 
   eventClick: function(info) {
-    const ev = events.find(e => e.title === info.event.title);
-    window.location.href = `big-art-fair.html?id=${ev.id}`;
+    const ev = info.event;
+    window.location.href = "event.html?id=" + encodeURIComponent(ev.title);
   }
 });
 
 calendar.render();
 
-/* MAP */
-const map = L.map('map').setView([51.5074, -0.1278], 12);
+/* =========================
+   MAP
+========================= */
+
+const map = L.map('map').setView([51.5074, -0.1278], 10);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap'
+  attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
+/* markers */
 events.forEach(ev => {
   L.marker([ev.lat, ev.lng])
     .addTo(map)
+    .bindPopup(`<b>${ev.title}</b>`)
     .on('click', () => {
-      window.location.href = `big-art-fair.html?id=${ev.id}`;
+      window.location.href = "event.html?id=" + encodeURIComponent(ev.title);
     });
 });
+
 </script>
 
 </body>
